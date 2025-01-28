@@ -35,6 +35,16 @@ export default function TabsLayout() {
                         tabBarIcon: ({ color }) => <Contact color={color} size={18} />,
                     }}
                 />
+
+                <Tabs.Screen
+                    name="calendar/[eventId]" // Matches `app/(root)/calendar/[eventId].tsx`
+
+                    options={{
+                        headerShown: false,
+                        href: null, // Hides this route from the tab bar
+                        tabBarStyle: { display: "none" }, // Hides the tab bar when on this screen
+                    }}
+                />
             </Tabs>
         </SafeAreaView>
     );
