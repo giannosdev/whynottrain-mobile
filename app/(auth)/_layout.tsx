@@ -12,13 +12,14 @@ export default function AuthLayout() {
                 }}
             />
             <Stack.Screen
-                name="log-in"
+                name="log-in/index"
                 options={{
                     title: 'Log In',
+                    headerShown: true,
                 }}
             />
             <Stack.Screen
-                name="sign-up"
+                name="sign-up/index"
                 options={{
                     title: 'Sign Up',
                 }}

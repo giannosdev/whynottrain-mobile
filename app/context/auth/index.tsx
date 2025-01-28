@@ -1,6 +1,7 @@
 import { useRouter, useSegments } from "expo-router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Text} from "~/components/ui/text";
 
 // Define types for the AuthContext
 interface AuthContextType {
@@ -9,7 +10,6 @@ interface AuthContextType {
     signOut: () => Promise<void>;
 }
 
-// Define types for the User object
 interface User {
     token: string;
 }
@@ -35,19 +35,37 @@ function useProtectedRoute(user: User | null) {
         const inAuthGroup = segments[0] === "(auth)";
 
         if (!user && !inAuthGroup) {
-            // Redirect to the sign-in page if not authenticated
+            // Redirect to the sign-in page if no user is authenticated
             router.replace("/(auth)/index");
         } else if (user && inAuthGroup) {
             // Redirect to the main app if already authenticated
-            router.replace("(root)/calendar");
+            router.replace("/(root)/calendar");
         }
     }, [user, segments]);
 }
 
 // AuthProvider Component
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
+    // Check token and authenticate user on app initialization
+    useEffect(() => {
+        const loadUserFromStorage = async () => {
+            const token = await AsyncStorage.getItem("token");
+
+            if (token) {
+                // If a token exists, set the user in context
+                setUser({ token });
+            }
+
+            setIsLoading(false); // Finish the loading process
+        };
+
+        loadUserFromStorage();
+    }, []);
+
+    // Apply route protection
     useProtectedRoute(user);
 
     // Function to handle sign-in
@@ -84,6 +102,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(null);
     };
 
+    if (isLoading) {
+        // Render a loading screen while token is being checked
+        return <Text className="text-center mt-4">Loading...</Text>;
+    }
+
     return (
         <AuthContext.Provider
             value={{
@@ -96,3 +119,5 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         </AuthContext.Provider>
     );
 };
+
+export default AuthProvider;

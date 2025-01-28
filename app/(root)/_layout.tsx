@@ -16,7 +16,7 @@ export default function TabsLayout() {
             >
                 {/* Calendar Tab */}
                 <Tabs.Screen
-                    name="calendar/index" // Matches `pages/(tabs)/calendar/index.tsx`
+                    name="calendar/index" // Matches `pages/(root)/calendar/index.tsx`
                     options={{
                         headerShown: false,
                         title: 'Calendar',
@@ -27,7 +27,7 @@ export default function TabsLayout() {
 
                 {/* Profile Tab */}
                 <Tabs.Screen
-                    name="profile/index" // Matches `pages/(tabs)/profile/index.tsx`
+                    name="profile/index" // Matches `pages/(root)/profile/index.tsx`
                     options={{
                         headerShown: false,
                         title: 'Profile',
