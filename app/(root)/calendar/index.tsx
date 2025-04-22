@@ -47,7 +47,7 @@ const CalendarScreen: React.FC = () => {
     }, []);
 
     return (
-        <View className="flex-1 bg-white">
+        <View className="flex-1">
             <CalendarProvider date={selectedDay} showTodayButton onDateChanged={(date) => setSelectedDay(date)}>
                 <ExpandableCalendar
                     disableMonthChange
@@ -61,6 +61,7 @@ const CalendarScreen: React.FC = () => {
                     }}
                 />
                 <AgendaList
+                    sectionStyle={{display: "none"}}
                     sections={agendaItems}
                     renderItem={renderItem}
                     className="p-2 rounded-lg m-2"

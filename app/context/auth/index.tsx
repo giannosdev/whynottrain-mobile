@@ -36,7 +36,7 @@ function useProtectedRoute(user: User | null) {
 
         if (!user && !inAuthGroup) {
             // Redirect to the sign-in page if no user is authenticated
-            router.replace("/(auth)/index");
+            router.replace("/(auth)");
         } else if (user && inAuthGroup) {
             // Redirect to the main app if already authenticated
             router.replace("/(root)/calendar");
