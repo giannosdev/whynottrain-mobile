@@ -61,10 +61,9 @@ const CalendarScreen: React.FC = () => {
                     }}
                 />
                 <AgendaList
-                    sectionStyle={{display: "none"}}
                     sections={agendaItems}
                     renderItem={renderItem}
-                    className="p-2 rounded-lg m-2"
+                    sectionStyle={{ backgroundColor: "#f0f0f0" }}
                 />
             </CalendarProvider>
         </View>

@@ -71,7 +71,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     // Function to handle sign-in
     const signIn = async (email: string, password: string): Promise<void> => {
         try {
-            const response = await fetch("http://10.0.2.2:3000/auth/login", {
+            const response = await fetch("http://localhost:3000/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

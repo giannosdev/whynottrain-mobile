@@ -11,6 +11,7 @@ import { PortalHost } from '@rn-primitives/portal';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthProvider from "~/app/context/auth";
+import { QueryProvider } from '~/app/context/query';
 
 const LIGHT_THEME: Theme = {
     ...DefaultTheme,
@@ -55,15 +56,16 @@ export default function RootLayout() {
 
     return (
         <AuthProvider isAuthenticated={isAuthenticated}>
+            <QueryProvider>
+                <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+                    <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+                    <Navigator>
 
-            <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-                <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-                <Navigator>
-
-                    <Slot />
-                </Navigator>
-                <PortalHost />
-            </ThemeProvider>
+                        <Slot />
+                    </Navigator>
+                    <PortalHost />
+                </ThemeProvider>
+            </QueryProvider>
         </AuthProvider>
     );
 }
