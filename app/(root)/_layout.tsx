@@ -13,7 +13,7 @@ export default function TabsLayout() {
                     tabBarInactiveTintColor: 'gray',
                 }}
             >
-                {/* Calendar Tab */}
+                {/* Calendar Tab - Also includes Workouts List View via toggle */}
                 <Tabs.Screen
                     name="calendar/index" // Matches `pages/(root)/calendar/index.tsx`
                     options={{
@@ -35,6 +35,17 @@ export default function TabsLayout() {
                     }}
                 />
 
+                {/* --- IMPORTANT FIX: Hide the entire workouts directory --- */}
+                <Tabs.Screen
+                    name="workouts" // Refers to the directory
+                    options={{
+                        headerShown: false,
+                        href: null, // Hides this route from the tab bar
+                        tabBarStyle: { display: "none" }, // Hides the tab bar when on any screen in this directory
+                    }}
+                />
+
+                {/* Hidden routes - don't show in tab bar */}
                 <Tabs.Screen
                     name="calendar/[eventId]" // Matches `app/(root)/calendar/[eventId].tsx`
 

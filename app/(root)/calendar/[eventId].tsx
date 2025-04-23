@@ -28,7 +28,7 @@ const EventDetails: React.FC = () => {
                 <Text className="text-lg font-bold">Event Details</Text>
                 <Text className="text-base">Event ID: {eventId}</Text>
                 <Text className="text-base">More details about this event...</Text>
-                <Button title="Go Back" onPress={() => router.back()} />
+                <Button onPress={() => router.back()} className="mt-4">Go Back</Button>
             </SafeAreaView>
         </View>
     );

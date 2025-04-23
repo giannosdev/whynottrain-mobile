@@ -1,17 +1,20 @@
 import { useRouter, useSegments } from "expo-router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {Text} from "~/components/ui/text";
+import { Text } from "~/components/ui/text";
+import { User, fetchCurrentUser } from "~/lib/api/user";
 
 // Define types for the AuthContext
 interface AuthContextType {
-    user: User | null;
+    user: UserState | null;
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
+    refreshUserProfile: () => Promise<void>;
 }
 
-interface User {
+interface UserState {
     token: string;
+    profile?: User;
 }
 
 // Create the AuthContext
@@ -27,7 +30,7 @@ export function useAuth() {
 }
 
 // Hook to handle protected routes
-function useProtectedRoute(user: User | null) {
+function useProtectedRoute(user: UserState | null) {
     const segments = useSegments();
     const router = useRouter();
 
@@ -46,20 +49,49 @@ function useProtectedRoute(user: User | null) {
 
 // AuthProvider Component
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<UserState | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    // Function to fetch user profile data
+    const fetchUserProfile = async (token: string): Promise<User | undefined> => {
+        try {
+            return await fetchCurrentUser();
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+            return undefined;
+        }
+    };
+
+    // Function to refresh user profile
+    const refreshUserProfile = async (): Promise<void> => {
+        if (!user?.token) return;
+        
+        try {
+            const profile = await fetchUserProfile(user.token);
+            if (profile) {
+                setUser({ ...user, profile });
+            }
+        } catch (error) {
+            console.error("Error refreshing user profile:", error);
+        }
+    };
 
     // Check token and authenticate user on app initialization
     useEffect(() => {
         const loadUserFromStorage = async () => {
-            const token = await AsyncStorage.getItem("token");
+            try {
+                const token = await AsyncStorage.getItem("token");
 
-            if (token) {
-                // If a token exists, set the user in context
-                setUser({ token });
+                if (token) {
+                    // If a token exists, fetch the user profile
+                    const profile = await fetchUserProfile(token);
+                    setUser({ token, profile });
+                }
+            } catch (error) {
+                console.error("Error loading user from storage:", error);
+            } finally {
+                setIsLoading(false); // Finish the loading process
             }
-
-            setIsLoading(false); // Finish the loading process
         };
 
         loadUserFromStorage();
@@ -88,8 +120,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             // Save the token to AsyncStorage
             await AsyncStorage.setItem("token", data.access_token);
 
+            // Fetch user profile with the new token
+            const profile = await fetchUserProfile(data.access_token);
+
             // Set the user in context
-            setUser({ token: data.access_token });
+            setUser({ token: data.access_token, profile });
         } catch (error) {
             console.error("Login error:", error);
             throw error;
@@ -113,6 +148,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 user,
                 signIn,
                 signOut,
+                refreshUserProfile,
             }}
         >
             {children}

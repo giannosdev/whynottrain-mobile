@@ -16,3 +16,8 @@ export const NAV_THEME = {
     text: 'hsl(0 0% 98%)', // foreground
   },
 };
+
+/**
+ * API configuration
+ */
+export const API_URL = "http://localhost:3000";
