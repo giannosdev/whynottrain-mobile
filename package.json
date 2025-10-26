@@ -1,5 +1,5 @@
 {
-  "name": ".",
+  "name": "whynottrain-mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -9,7 +9,7 @@
     "android": "expo start -c --android",
     "ios": "expo start -c --ios",
     "web": "expo start -c --web",
-    "clean": "rm -rf .expo node_modules",
+    "clean": "rimraf .expo node_modules",
     "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css"
   },
   "dependencies": {
@@ -58,7 +58,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@types/react": "~18.3.12",
+    "react-native-reanimated-monorepo": "github:react-native-reanimated/plugin",
+    "rimraf": "^6.0.1",
     "typescript": "^5.3.3"
   },
   "private": true

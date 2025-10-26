@@ -1,7 +1,8 @@
+import 'react-native-reanimated';
 import '~/global.css';
 
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
-import {Navigator, Stack, Slot} from 'expo-router';
+import { Navigator, Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform } from 'react-native';
@@ -9,8 +10,7 @@ import { NAV_THEME } from '~/lib/constants';
 import { useColorScheme } from '~/lib/useColorScheme';
 import { PortalHost } from '@rn-primitives/portal';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AuthProvider from "~/app/context/auth";
+import AuthProvider from '~/app/context/auth';
 import { QueryProvider } from '~/app/context/query';
 
 const LIGHT_THEME: Theme = {
@@ -26,16 +26,6 @@ export default function RootLayout() {
     const hasMounted = React.useRef(false);
     const { colorScheme, isDarkColorScheme } = useColorScheme();
     const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-    const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | null>(null);
-
-    // Check authentication status
-    React.useEffect(() => {
-        const checkAuth = async () => {
-            const token = await AsyncStorage.getItem('token');
-            setIsAuthenticated(!!token); // If token exists, user is authenticated
-        };
-        checkAuth();
-    }, []);
 
     React.useLayoutEffect(() => {
         if (hasMounted.current) {
@@ -50,12 +40,12 @@ export default function RootLayout() {
         hasMounted.current = true;
     }, []);
 
-    if (!isColorSchemeLoaded || isAuthenticated === null) {
+    if (!isColorSchemeLoaded) {
         return null; // Show a splash/loading indicator while checking auth
     }
 
     return (
-        <AuthProvider isAuthenticated={isAuthenticated}>
+        <AuthProvider>
             <QueryProvider>
                 <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
                     <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />

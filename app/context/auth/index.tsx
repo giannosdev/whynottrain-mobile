@@ -1,4 +1,4 @@
-import { useRouter, useSegments } from "expo-router";
+import { useRouter, useSegments, useRootNavigationState } from "expo-router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "~/components/ui/text";
@@ -33,8 +33,13 @@ export function useAuth() {
 function useProtectedRoute(user: UserState | null) {
     const segments = useSegments();
     const router = useRouter();
+    const navigationState = useRootNavigationState();
 
     useEffect(() => {
+        if (!navigationState?.key) {
+            return;
+        }
+
         const inAuthGroup = segments[0] === "(auth)";
 
         if (!user && !inAuthGroup) {
@@ -44,7 +49,7 @@ function useProtectedRoute(user: UserState | null) {
             // Redirect to the main app if already authenticated
             router.replace("/(root)/calendar");
         }
-    }, [user, segments]);
+    }, [navigationState?.key, user, segments]);
 }
 
 // AuthProvider Component

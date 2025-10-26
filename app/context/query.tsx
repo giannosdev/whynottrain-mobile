@@ -8,8 +8,9 @@ const queryClient = new QueryClient();
  * @param children - React children
  * @returns Provider component
  */
-export const QueryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const QueryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-export { queryClient };
+export { QueryProvider, queryClient };
+export default QueryProvider;
